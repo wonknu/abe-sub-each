@@ -1,0 +1,50 @@
+{{abe type='slug' source='quiz/{{page_name}}-{{quizRef.value}}-{{contentId}}'}}
+
+{{abe type='data' key='quizRef' desc='Quiz type' source='reference/quiz.json' visible="false" max-length="1" display='value' tab='slug'}}
+
+{{abe type='text' key='page_name' desc='Name of your page' visible='false' tab='slug' required='true'}}
+
+{{abe type='text' key='contentId' desc='Content Id' visible='false' tab='slug' required='true'}}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+	{{#each results}}
+	​	
+		<p>
+			{{abe type='text' key='results.title' desc='Result title' tab='Quiz Results'}}
+		</p>
+
+		<img src="{{abe type='image' key='results.img' desc='Result image' thumbs='1400x541' tab='Quiz Results'}}" style="width:50px;">
+
+	{{/each}}
+
+	{{#each questions}}
+	​	
+		<div style="background: {{color}};">
+
+			<p>
+				{{abe type='rich' key='questions.title' desc='Result title' tab='Questions and Answers' order='11'}}
+			</p>
+
+			<img src="{{abe type='image' key='questions.img' desc='Result image' thumbs='802x291' tab='Questions and Answers' order='22'}}" style="width:50px;">
+
+			{{abe type='data' key='questions.color' desc='color' source='["red", "green", "blue"]' max-length='1' visible='false' reload='true' tab='Questions and Answers' order='33'}}
+
+			{{abe type='data' key='questions.type' desc='type' source='["list", "block"]' max-length='1' visible='false' reload='true' tab='Questions and Answers' order='44'}}
+
+			{{abe type='data' key='questions.multi' desc='multi' source='["non", "oui"]' max-length='1' visible='false' reload='true' tab='Questions and Answers' order='55'}}
+
+			{{abe type='text' key='questions.answers' desc='Answers' tab='Questions and Answers' visible='false' reload='true' subEach='[{"type":"text","key":"answer","desc":"Answer"},{"type":"image","key":"image","desc":"Image"}]' order='66'}}
+
+      {{{decode answers @root 'answers'}}}
+
+		</div>
+	{{/each}}
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+<style>
+	.daddy-sub ~ .input-group-addon,
+	.daddy-sub ~ .form-abe {
+		height: 0;
+    width: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 0;
+    opacity: 0;
+	}
+	input.data-sub {
+	  position: relative;
+	  z-index: 2;
+	  width: 100%;
+	  margin-bottom: 0;
+	  padding: 4px 12px;
+		font-size: 14px;
+		color: #555;
+		background-color: #fff;
+		background-image: none;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
+	.add-sub-block {
+    background: none;
+		color: rgb(142, 142, 142);
+		cursor: pointer;
+		display: inline-block;
+		text-align: center;
+    border: none;
+	}
+  .daddy {
+    background: #efefef;
+    padding: 5px 0 0;
+    margin: 10px 0;
+    position: relative;
+  }
+  .daddy input[type="text"] {
+    margin: 0 5px;
+    width: calc(100% - 10px);
+  }
+  .input-div-first,
+  .input-div-last,
+  .input-div-first-last {
+    padding: 0 5px;
+    position: relative;
+  }
+  .input-div-last {
+    padding: 10px;
+    border-bottom: 1px solid #FFF;
+  }
+  .remove-sub-block {
+    color: #8E8E8E;
+    background-color: inherit;
+    border: 0;
+    padding: 0;
+    position: absolute;
+    z-index: 5656;
+    right: 10px;
+    top: 5px;
+    height: 15px;
+    width: 15px;
+  }
+</style>
+<script>
+	var uploadfile = function uploadfile (target, cb) {
+		var formData = new FormData()
+    if (target.value == '') {
+      console.log('Please choose file!');
+      return false;
+    }
+    var file = target.files[0];
+
+    formData.append('uploadfile', file)
+    var xhr = new XMLHttpRequest()
+    xhr.open('post', '/abe/upload/?baseUrl=' + CONFIG.FILEPATH + '&input=' + target.outerHTML, true)
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        console.log("up up", (e.loaded / e.total) * 100);
+      }
+    }
+    xhr.onerror = () => { console.log('An error occurred while submitting the form. Maybe your file is too big') }
+    xhr.onload = () => {
+      var resp = JSON.parse(xhr.responseText);
+      if (resp.success) {
+        cb(resp);
+      }
+      if (resp.error) {
+        console.log(resp.error);
+        return
+      }
+      if (resp.thumbs) {
+        console.log(resp.thumbs);
+      }
+    };
+    xhr.send(formData);
+	};
+
+	var createDOM = function createDOM (tag, opts) {
+		var node = document.createElement(tag);
+		for (var prop in opts) {
+			if(prop === 'class') node.classList.add(opts[prop]);
+			else if(prop === 'text') node.textContent = opts[prop];
+			else if(prop === 'html') node.innerHTML = opts[prop];
+			else if(prop === 'type' && opts[prop] === 'image') node.type = 'file';
+			else node.setAttribute(prop, opts[prop]);
+		}
+		return node;
+	};
+
+	var Each = function Each (opts) {
+		this.item = opts.item;
+		this.index = opts.index;
+		this.mainInput = this.item.parentNode.querySelector('input');
+    daddy = createDOM('div', {class: 'daddy'});
+    this.item.parentNode.parentNode.appendChild(daddy);
+
+		try {
+			this.mainInput.value = eval('abe.json._data.' + this.mainInput.id);
+			if(this.mainInput.value === 'undefined') this.inputValue([]);
+		} catch(e) {
+			this.inputValue([]);
+		}
+
+		var inputValue = this.inputValue();
+		var json = JSON.parse(this.item.getAttribute('data-sub'));
+		var plus = createDOM('button', {class: 'add-sub-block', html: `<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>`});
+    daddy.parentNode.parentNode.insertBefore(plus, daddy.parentNode);
+
+		var htmlDiv = [];
+		var count = 0;
+
+		for (var i = 0; i < (inputValue.length > 0 ? inputValue.length : 1); i++) {
+			htmlDiv = [];
+      count = 0;
+      var hash = `${opts.index}${parseInt(Math.random()*10000000)}`
+      var moins = createDOM('button', {
+        'data-hash': hash,
+        'data-index': i,
+        class: 'remove-sub-block',
+        html: `<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>`}
+      );
+
+			json.forEach(function (el, index) {
+        var div = createDOM('div', {'data-hash': hash, class: this.getClassDiv(json.length, index)});
+				var input = createDOM('input', {class: 'data-sub', type: el.type, value: (inputValue[i] && inputValue[i][el.key]) ? inputValue[i][el.key] : ''});
+        var label = createDOM('label', {text: el.desc});
+
+				for (var prop in el) input.setAttribute(`data-${prop}`, el[prop]);
+        
+        if(index === 0) {
+          let daddyScoped = daddy;
+          div.appendChild(moins);
+          moins.addEventListener('click', function (e) {
+            e.preventDefault();
+            var target = e.currentTarget;
+            var inputValue = this.inputValue();
+            inputValue.splice(target.getAttribute('data-index'), 1);
+            this.inputValue(inputValue);
+            this.reload(input);
+            Array.prototype.forEach.call(target.parentNode.parentNode.querySelectorAll(`[data-hash="${target.getAttribute('data-hash')}"]`), function (item) {
+              item.remove();
+            }.bind(this));
+          }.bind(this));
+
+          plus.addEventListener('click', function (e) {
+            e.preventDefault();
+            htmlDiv.forEach(function (html, index) {
+              var div = createDOM('div', { class: this.getClassDiv(count, index) });
+              div.innerHTML += html.replace(/value=\".*?\"/g, 'value=""');
+
+              daddyScoped.appendChild(div);
+              var i = (daddyScoped.querySelectorAll('.data-sub').length / count) - 1;
+
+              Array.prototype.forEach.call(div.querySelectorAll('input'), function (input) {
+                this.bindEvt(input, i);
+              }.bind(this));
+            }.bind(this));
+          }.bind(this));
+        }
+				div.appendChild(label);
+				div.appendChild(input);
+				daddy.appendChild(div);
+        htmlDiv.push(div.innerHTML);
+				count++;
+				this.bindEvt(input, i);
+			}.bind(this))
+		}
+
+	};
+
+	Each.prototype.getClassDiv = function getClassDiv (count, index) {
+    var divClass = 'input-div';
+		if (index === 0) divClass = 'input-div-first';
+    if (count - 1 === index) divClass = 'input-div-last';
+    if (count - 1 === index && index === 0) divClass = 'input-div-first-last';
+    return divClass;
+	};
+
+	Each.prototype.inputValue = function inputValue (value) {
+		if(value) this.mainInput.value = encodeURI(JSON.stringify(value));
+		return JSON.parse(decodeURI(this.mainInput.value));
+	};
+
+	Each.prototype.reload = function reload (input) {
+    var inputParent = input.parentNode.parentNode.parentNode.querySelector('.form-abe');
+    inputParent.focus();
+    inputParent.blur();
+	};
+
+	Each.prototype.bindEvt = function bindEvt (input, index) {
+    if(input.type === 'file') {
+      input.addEventListener('change', function (e) {
+        uploadfile(e.target, function (res) {
+          var obj = this.inputValue();
+          if (!obj[index]) obj[index] = {};
+          obj[index][input.getAttribute('data-key')] = res.filePath;
+          this.inputValue(obj);
+          this.reload(input);
+        }.bind(this));
+      }.bind(this));
+    }
+    else {
+      input.addEventListener('keyup', function (e) {
+        var obj = this.inputValue();
+        if (!obj[index]) obj[index] = {};
+        obj[index][input.getAttribute('data-key')] = input.value;
+        this.inputValue(obj);
+      }.bind(this));
+      input.addEventListener('blur', function (e) {
+        this.reload(input);
+      }.bind(this));
+    }
+	};
+
+	var init = function init () {
+		var items = document.querySelectorAll('.daddy-sub');
+		items.forEach(function (item, index) {
+			if(item.parentNode.parentNode.parentNode.parentNode.parentNode.classList.contains('init')) return;
+			item.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('init');
+
+			Array.prototype.forEach.call(item.parentNode.parentNode.querySelectorAll('.data-sub'), function (item) {
+			  item.parentNode.remove()
+			});
+
+	    new Each({item: item, index: index});
+		})
+	}
+
+	document.addEventListener("DOMContentLoaded", init);
+	abe.blocks.onNewBlock(init);
+</script>

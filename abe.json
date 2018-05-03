@@ -1,0 +1,227 @@
+{
+  "processName": "ibis",
+  "cookie": {
+    "secure": false
+  },
+  "users": {
+    "enable": false,
+    "forgotExpire": 60,
+    "smtp": {
+      "host": "email-smtp.eu-west-1.amazonaws.com",
+      "secureConnection": true,
+      "port": 465,
+      "auth": {
+        "user": "AKIAIUMTXE77X42WZKAQ",
+        "pass": "AnfOwH8FLWJFfMVv8t48wZ2W37O3rIJBQQ9IUOxc87CA"
+      }
+    },
+    "email": {
+      "from": "ABE Support <no-reply@abejs.io>",
+      "subject": "Reset your password",
+      "text": "Hello {{user.username}} {{user.name}}, We've received a request to reset your passwrod (hopefull you). No changes have been made to your account yet. Otherwise, you can reset your password using this link: {{forgotUrl}} If you didn't make the request, ignore safely this email. Only a person with access to your email can reset your account password The ABE Team",
+      "html": "Hello {{user.username}} {{user.name}}, We've received a request to reset your passwrod (hopefull you). No changes have been made to your account yet. Otherwise, you can reset your password using this link: {{forgotUrl}} If you didn't make the request, ignore safely this email. Only a person with access to your email can reset your account password The ABE Team",
+      "templateHtml": "/custom/forgot.html"
+    },
+    "limiter": {
+      "duration": 6000,
+      "max": 100
+    },
+    "owasp": {
+      "allowPassphrases": true,
+      "maxLength": 128,
+      "minLength": 8,
+      "minPhraseLength": 20,
+      "minOptionalTestsToPass": 4,
+      "sameAsUser": true,
+      "mostCommon": true
+    },
+    "manage": [
+      "admin"
+    ],
+    "secret": "GoNinjaGo",
+    "roles": [
+      {
+        "workflow": "review",
+        "name": "Contributor"
+      },
+      {
+        "workflow": "approve",
+        "name": "Approver"
+      },
+      {
+        "workflow": "publish",
+        "name": "Publisher"
+      },
+      {
+        "workflow": "admin",
+        "name": "Admin"
+      }
+    ],
+    "workflow": [
+      "draft",
+      "review",
+      "approve",
+      "publish"
+    ],
+    "routes": {
+      "admin": [
+        ".*?"
+      ],
+      "review": [
+        "/abe/users/forgot.*",
+        "/abe/users/login.*",
+        "/abe/users/logout.*",
+        "/abe/users/reset.*",
+        "/abe/users/profile.*",
+        "/abe/users/login.*",
+        "/abe/users/reset.*",
+        "/abe/paginate.*",
+        "/abe/create.*",
+        "/abe/duplicate.*",
+        "/abe/update.*",
+        "/abe/sql-request.*",
+        "/abe/page/.*",
+        "/abe/page/.*",
+        "/abe/generate-posts.*",
+        "/abe/thumbs/.*",
+        "/abe/image/.*",
+        "/abe/upload/.*",
+        "/abe/editor.*",
+        "/abe/operations/delete/draft.*",
+        "/abe/operations/submit/draft.*",
+        "/abe/operations/edit/draft.*",
+        "/abe/operations/delete/review.*",
+        "/abe/operations/reject/review.*",
+        "/abe/operations/submit/review.*",
+        "/abe/plugin/abe-geomaj/cities.*",
+        "/abe/plugin/abe-trad/create.*",
+        "/abe/plugin/export-csv/generate.*"
+      ],
+      "approve": [
+        "/abe/users/forgot.*",
+        "/abe/users/login.*",
+        "/abe/users/logout.*",
+        "/abe/users/reset.*",
+        "/abe/users/login.*",
+        "/abe/users/reset.*",
+        "/abe/paginate.*",
+        "/abe/create.*",
+        "/abe/duplicate.*",
+        "/abe/update.*",
+        "/abe/sql-request.*",
+        "/abe/page/.*",
+        "/abe/page/.*",
+        "/abe/generate-posts.*",
+        "/abe/thumbs/.*",
+        "/abe/image/.*",
+        "/abe/upload/.*",
+        "/abe/editor.*",
+        "/abe/operations/delete/draft.*",
+        "/abe/operations/submit/draft.*",
+        "/abe/operations/edit/draft.*",
+        "/abe/operations/delete/review.*",
+        "/abe/operations/reject/review.*",
+        "/abe/operations/submit/review.*",
+        "/abe/operations/edit/review.*",
+        "/abe/operations/delete/approve.*",
+        "/abe/operations/reject/approve.*",
+        "/abe/operations/submit/approve.*",
+        "/abe/operations/edit/approve.*",
+        "/abe/plugin/abe-geomaj/cities.*",
+        "/abe/plugin/abe-trad/create.*",
+        "/abe/plugin/export-csv/generate.*"
+      ],
+      "publish": [
+        "/abe/users/forgot.*",
+        "/abe/users/list.*",
+        "/abe/users/login.*",
+        "/abe/users/logout.*",
+        "/abe/users/reset.*",
+        "/abe/users/profile.*",
+        "/abe/users/activate.*",
+        "/abe/users/add.*",
+        "/abe/users/deactivate.*",
+        "/abe/users/login.*",
+        "/abe/users/remove.*",
+        "/abe/users/reset.*",
+        "/abe/users/update.*",
+        "/abe/users/profile.*",
+        "/abe/paginate.*",
+        "/abe/create.*",
+        "/abe/duplicate.*",
+        "/abe/update.*",
+        "/abe/sql-request.*",
+        "/abe/page/.*",
+        "/abe/page/.*",
+        "/abe/generate-posts.*",
+        "/abe/save-config.*",
+        "/abe/reference.*",
+        "/abe/structure.*",
+        "/abe/thumbs/.*",
+        "/abe/image/.*",
+        "/abe/upload/.*",
+        "/abe/reference/.*",
+        "/abe/structure/.*",
+        "/abe/editor.*",
+        "/abe/list-url/save.*",
+        "/abe/list-workflow.*",
+        "/abe/list-url.*",
+        "/abe/list-hooks.*",
+        "/abe/operations/delete/draft.*",
+        "/abe/operations/submit/draft.*",
+        "/abe/operations/edit/draft.*",
+        "/abe/operations/delete/review.*",
+        "/abe/operations/reject/review.*",
+        "/abe/operations/submit/review.*",
+        "/abe/operations/edit/review.*",
+        "/abe/operations/delete/approve.*",
+        "/abe/operations/reject/approve.*",
+        "/abe/operations/submit/approve.*",
+        "/abe/operations/edit/approve.*",
+        "/abe/operations/delete/publish.*",
+        "/abe/operations/unpublish.*",
+        "/abe/operations/submit/publish.*",
+        "/abe/operations/edit/publish.*",
+        "/abe/plugin/abe-debugger/data.*",
+        "/abe/plugin/abe-debugger/flush.*",
+        "/abe/plugin/abe-debugger/json.*",
+        "/abe/plugin/abe-debugger/data.*",
+        "/abe/plugin/abe-debugger/json.*",
+        "/abe/plugin/abe-geomaj/cities.*",
+        "/abe/plugin/abe-tags/all.*",
+        "/abe/plugin/abe-tags/search.*",
+        "/abe/plugin/abe-trad/create.*",
+        "/abe/plugin/abe-sitemap/generate.*",
+        "/abe.*",
+        "/abe/plugin/export-csv/generate.*"
+      ]
+    }
+  },
+  "csp": {
+    "scriptSrc": [
+      "*.googletagmanager.com",
+      "*.youtube.com",
+      "s.ytimg.com",
+      "*.doubleclick.net"
+    ],
+    "styleSrc": [],
+    "imgSrc": [
+      "*.ibis.com",
+      "*.xiti.com",
+      "www.ahstatic.com"
+    ],
+    "childSrc": [
+      "*.xiti.com",
+      "*.youtube.com"
+    ],
+    "frameAncestors": [
+      "*.xiti.com",
+      "www.googletagmanager.com"
+    ],
+    "mediaSrc": [],
+    "fontSrc": [],
+    "connectSrc": [
+      "www.durville.io"
+    ]
+  }
+}
